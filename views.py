@@ -42,7 +42,7 @@ class SearchView(Resource):
         total_len = 0
         for website in valid_websites:
             website_name = website.get('name')
-            site_ids = website.get('site_ids')
+            site_ids = [website.get('site_id'), ]
             collections_processed = set()
             website_obj = self.website_objs[website_name]
             for site_id in site_ids:
