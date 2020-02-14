@@ -1,12 +1,14 @@
 from flask import request
 from flask_restful import Resource
 
+from aliexpress_website import AliExpressWebsite
 from ebay_website import EbayWebsite
 
 
 class SearchView(Resource):
     available_websites = {
-        'ebay': EbayWebsite
+        'ebay': EbayWebsite,
+        'aliexpress': AliExpressWebsite
     }
     website_objs = dict()
 
@@ -55,6 +57,8 @@ class SearchView(Resource):
                                                                 product_collection)
                 except Exception as e:
                     print(e)
+                    import traceback
+                    traceback.print_exc()
                     site_products = list()
                 total_len += len(site_products)
                 all_products += site_products
