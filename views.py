@@ -1,8 +1,15 @@
+import multiprocessing
+from multiprocessing import TimeoutError
+
 from flask import request
 from flask_restful import Resource
 
 from ebay_website import EbayWebsite
 from aliexpress_website import AliExpressWebsite
+
+
+def call_search_method(website_obj, args):
+    return website_obj.search_products(*args)
 
 
 class SearchView(Resource):
@@ -52,33 +59,51 @@ class SearchView(Resource):
         total_len = 0
         all_aspect_stats = list()
         all_category_stats = list()
+        processes = list()
+        pool = multiprocessing.Pool(processes=4)
         for website_name in valid_websites:
             website_obj = self.website_objs[website_name]
+            try:
+                func = call_search_method
+                args = (search_keyword, aspect_filters, category_ids,
+                        item_filters, page_num, sort_order)
+                process = pool.apply_async(func, (website_obj, args))
+                processes.append((website_name, process))
+            except Exception as err:
+                print(err)
+                import traceback
+                traceback.print_exc()
+
+        sites_inactive = []
+        for website_name, process in processes:
             search_products = list()
             aspect_stats = list()
             category_stats = list()
             try:
-                search_data = website_obj.search_products(
-                    search_keyword, aspect_filters, category_ids,
-                    item_filters, page_num, sort_order
-                )
+                search_data = process.get(timeout=5)
                 search_products = search_data.get('products') or list()
                 aspect_stats = search_data.get('aspect_stats') or list()
                 category_stats = search_data.get('category_stats') or list()
-            except Exception as e:
-                print(e)
+            except TimeoutError:
+                sites_inactive.append(website_name)
+            except Exception as err:
                 import traceback
                 traceback.print_exc()
+                print("Unable to get data from {} due to error: {}"
+                      .format(website_name, err))
+
             total_len += len(search_products)
             all_products += search_products
 
             # TODO: process the aspect and category stats
             all_aspect_stats += aspect_stats
             all_category_stats += category_stats
+        all_products.sort(key=lambda x: x['price'])
         return {
             'total_products': total_len,
             'status': 200,
             'products': all_products,
             # 'aspect_stats': all_aspect_stats,
             # 'category_stats': all_category_stats
+            "timeout_error_sites": sites_inactive
         }
