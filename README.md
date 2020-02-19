@@ -1,4 +1,4 @@
-##Requirements:  
+## Requirements:  
 - Python 2.7
 
 ## Deploying the project:  
@@ -88,7 +88,7 @@
 }
 ```
 - Major fields in the Response are:  
-    - products: contains the list of products to be shown.  
+    - products: contains the list of products matching the given keyword.  
     - aspect_stats: This contains the specification of the products along with their count.
     - category_stats: This contains the product categories along with their counts.
     - timeout_error_sites: This contains the list of sites which were not able to produce output in give time frame.
