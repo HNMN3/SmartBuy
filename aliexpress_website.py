@@ -13,10 +13,10 @@ class AliExpressWebsite(BaseWebsite):
         super(AliExpressWebsite, self).__init__()
 
         # Ali express credentials
-        self.app_key = '28324225'
-        self.secret = 'd38fe5397ded393a3bdc07d017788588'
-        self.app_signature = 'qXdMo8DCJaH'
-        self.tracking_id = "saydtel3sr"
+        self.app_key = 'sample_app_key'
+        self.secret = 'sample_secret'
+        self.app_signature = 'sample_sign'
+        self.tracking_id = "sample_tracking_id"
 
         self.ali_express = top.api.AliexpressAffiliateProductQueryRequest()
         self.ali_express.set_app_info(top.appinfo(self.app_key, self.secret))
