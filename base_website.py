@@ -1,4 +1,5 @@
 from abc import abstractmethod, ABCMeta
+import os
 
 from pymongo import MongoClient
 
@@ -6,9 +7,9 @@ from pymongo import MongoClient
 class BaseWebsite:
     __metaclass__ = ABCMeta
     # Database Info
-    db_host = "82.217.36.166"
-    db_user = "shoper"
-    db_password = "mody1"
+    db_host = os.environ.get("DB_HOST")
+    db_user = os.environ.get("USERNAME")
+    db_password = os.environ.get("PASSWORD")
     db_name = ""
     website_name = ""
     db_port = 27017
