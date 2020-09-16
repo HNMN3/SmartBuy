@@ -19,7 +19,7 @@ class EbayWebsite(BaseWebsite):
     def __init__(self):
         super(EbayWebsite, self).__init__()
         self.finding_api = FindingAPI(
-            appid='MohamedA-wordpres-PRD-12466ad41-433fc508', config_file=None)
+            appid='sample_app_id', config_file=None)
 
     def call_api(self, search_criteria):
         try:
@@ -39,8 +39,8 @@ class EbayWebsite(BaseWebsite):
 
     def put_extra_field(self, product):
         url = product.get("viewItemURL")
-        promotion_link = ("https://rover.ebay.com/rover/1/711-53200-19255-0/1?"
-                          "campid=5338077955&customid=womensathleticapparel&"
+        promotion_link = ("https://rover.ebay.com/rover/1/link/1?"
+                          "campid=sample_camp_id&"
                           "toolid=10018&mpre=%s" % url)
         product['promotion_link'] = promotion_link
         product['price'] = float(self.get_field_value(product,
